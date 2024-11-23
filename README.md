@@ -94,3 +94,11 @@ $\bf \large Database\ 명세$
     | issueTime | Timestamp | 발령시간 | primarykey |
     | station | VarChar(16) | 측정소 | primarykey |
 - crtab
+
+---
+
+$\bf \large 실행전\ jar파일 추가하기$
+lib폴더 밑에 존재하는 다음 jar파일을 추가한다.
+- jackson-core-2.13.4-javadoc
+- jackson-databind-2.13.4.2
+- jackson-annotations-2.13.4
