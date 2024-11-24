@@ -97,12 +97,16 @@ $\bf \large Database\ 명세$
 
 ---
 
-$\bf \large 실행전\ jar파일 추가하기$  
+$\bf \large 실행시\ 주의\ 사항$  
 
-lib폴더 밑에 존재하는 다음 jar파일을 추가한다.
+1. lib폴더 밑에 존재하는 다음 jar파일을 추가한다.
 - jackson-core-2.15.2
 - jackson-databind-2.15.2
 - jackson-annotations-2.15.2
 - jackson-datatype-jsr310-2.15.2
 - mybatis-3.5.6.jar
 - postgresql-42.7.3.jar
+2. DB 테이블을 resource 밑에 crtab 파일을 이용하여 생성한다.
+- 유저 및 데이터베이스를 생성하고, 이후 새롭세 생성한 유저로 데이터베이스에 접속하여 테이블을 생성한다.
+3. 기존에 생성한 이력은 실행시 삭제하고 새롭게 이력을 저장한다.
+4. 파일을 읽어 경보 정보를 저장하는 일회성 프로그램으로 오류 발생시 프로그램이 종료된다.
