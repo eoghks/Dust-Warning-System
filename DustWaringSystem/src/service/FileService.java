@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import domain.constant.PropertiesConst;
+import domain.constant.ApplicationConst;
 import domain.vo.DustDataVo;
 
 public class FileService {
@@ -17,7 +17,7 @@ public class FileService {
 		mapper.registerModule(new JavaTimeModule());
 		List<DustDataVo> list = new ArrayList<>();
 		try {
-			File file = new File(PropertiesConst.JsonFilePath);
+			File file = new File(ApplicationConst.JsonFilePath);
 			list = mapper.readValue(file, new TypeReference<List<DustDataVo>>() {});
 		} catch(Exception e) {
 			System.out.println("Read Json File Error");
