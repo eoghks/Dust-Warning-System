@@ -12,7 +12,10 @@ import domain.vo.DustDataVo;
 public class WarningService {
 	private MybatisService mybatisService = new MybatisService();
 
-	public void createWarning(List<DustDataVo> datas) {
+	public void createWarning(List<DustDataVo> datas) throws Exception {
+		//기존 이력 삭제
+		deleteHistory();
+
 		Map<String, List<DustDataVo>> map = datas.stream()
 				.sorted(Comparator.comparing(DustDataVo::getDate))
 				.collect(Collectors.groupingBy(DustDataVo::getDistrictName));
@@ -49,4 +52,10 @@ public class WarningService {
 		}
 	}
 
+	private void deleteHistory() throws Exception {
+		System.out.println("경보 이력 삭제");
+		mybatisService.deleteAllWarningHistory();
+		System.out.println("점검 이력 삭제");
+		mybatisService.deleteAllInspectionHistory();
+	}
 }

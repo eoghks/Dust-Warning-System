@@ -12,7 +12,8 @@ import domain.constant.ApplicationConst;
 import domain.vo.DustDataVo;
 
 public class FileService {
-	public List<DustDataVo> readJsonFile() {
+	public List<DustDataVo> readJsonFile() throws Exception{
+		System.out.println("JSON 파일 읽기");
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.registerModule(new JavaTimeModule());
 		List<DustDataVo> list = new ArrayList<>();
@@ -21,7 +22,7 @@ public class FileService {
 			list = mapper.readValue(file, new TypeReference<List<DustDataVo>>() {});
 		} catch(Exception e) {
 			System.out.println("Read Json File Error");
-			e.printStackTrace();
+			throw e;
 		}
 		return list;
 	}

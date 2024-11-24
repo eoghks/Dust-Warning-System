@@ -19,6 +19,7 @@ public class MyBatisConnectionFactory {
 		} catch(Exception e) {
 			System.out.println("DB 연결 오류");
 			e.printStackTrace();
+			System.exit(1);
 		}
 	}
 

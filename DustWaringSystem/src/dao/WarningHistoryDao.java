@@ -7,8 +7,12 @@ import org.apache.ibatis.session.SqlSession;
 import domain.constant.ApplicationConst;
 import domain.dto.WarningHistoryDto;
 
-public class WarningDao {
+public class WarningHistoryDao {
 	public List<WarningHistoryDto> selectWarningHistoryList(SqlSession sqlSession) {
 		return sqlSession.selectList(ApplicationConst.Facade+".selectAllWarningHistory");
+	}
+
+	public void deleteAllWarningHistory(SqlSession sqlSession) {
+		sqlSession.selectList(ApplicationConst.Facade+".deleteAllWarningHistory");
 	}
 }
