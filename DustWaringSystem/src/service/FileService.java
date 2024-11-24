@@ -1,10 +1,8 @@
 package service;
 
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,29 +12,17 @@ import domain.constant.PropertiesConst;
 import domain.vo.DustDataVo;
 
 public class FileService {
-	public List<DustDataVo> readJsonFile(Properties properties) {
+	public List<DustDataVo> readJsonFile() {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.registerModule(new JavaTimeModule());
 		List<DustDataVo> list = new ArrayList<>();
 		try {
-			File file = new File(properties.getProperty(PropertiesConst.JsonFilePath));
+			File file = new File(PropertiesConst.JsonFilePath);
 			list = mapper.readValue(file, new TypeReference<List<DustDataVo>>() {});
 		} catch(Exception e) {
 			System.out.println("Read Json File Error");
 			e.printStackTrace();
 		}
 		return list;
-	}
-
-	public Properties readProperties() {
-		Properties properties = new Properties();
-		try {
-			FileReader reader= new FileReader(PropertiesConst.PropertiesPath);
-			properties.load(reader);
-		} catch(Exception e) {
-			System.out.println("Read Properties Error");
-			e.printStackTrace();
-		}
-		return properties;
 	}
 }
