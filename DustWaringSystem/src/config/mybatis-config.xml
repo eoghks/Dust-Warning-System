@@ -4,8 +4,8 @@
 	"http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<typeAliases>
-		<typeAlias alias="InspectionHistory" type="domain.dto.InspectionHistoryDto"/>
-		<typeAlias alias="WarningHistory" type="domain.dto.WarningHistoryDto"/>
+		<typeAlias alias="InspectionHistory" type="model.dto.InspectionHistoryDto"/>
+		<typeAlias alias="WarningHistory" type="model.dto.WarningHistoryDto"/>
 	</typeAliases>
 
  	<environments default="development">

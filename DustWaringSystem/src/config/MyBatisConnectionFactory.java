@@ -6,7 +6,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import domain.constant.ApplicationConst;
+import model.constant.ApplicationConst;
 
 public class MyBatisConnectionFactory {
 	private static SqlSessionFactory sqlSessionFactory;

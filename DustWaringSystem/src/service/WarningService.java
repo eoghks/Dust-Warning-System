@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import domain.dto.InspectionHistoryDto;
-import domain.dto.WarningHistoryDto;
-import domain.vo.DustDataVo;
+import model.dto.InspectionHistoryDto;
+import model.dto.WarningHistoryDto;
+import model.vo.DustDataVo;
 
 public class WarningService {
 	private MybatisService mybatisService = new MybatisService();

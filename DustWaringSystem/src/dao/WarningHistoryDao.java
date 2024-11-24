@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
-import domain.constant.ApplicationConst;
-import domain.dto.WarningHistoryDto;
+import model.constant.ApplicationConst;
+import model.dto.WarningHistoryDto;
 
 public class WarningHistoryDao {
 	public List<WarningHistoryDto> selectWarningHistoryList(SqlSession sqlSession) {

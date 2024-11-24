@@ -8,8 +8,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import domain.constant.ApplicationConst;
-import domain.vo.DustDataVo;
+import model.constant.ApplicationConst;
+import model.vo.DustDataVo;
 
 public class FileService {
 	public List<DustDataVo> readJsonFile() throws Exception{

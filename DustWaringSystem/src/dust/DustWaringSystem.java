@@ -2,7 +2,7 @@ package dust;
 
 import java.util.List;
 
-import domain.vo.DustDataVo;
+import model.vo.DustDataVo;
 import service.FileService;
 import service.WarningService;
 

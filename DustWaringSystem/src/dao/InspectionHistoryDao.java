@@ -2,7 +2,7 @@ package dao;
 
 import org.apache.ibatis.session.SqlSession;
 
-import domain.constant.ApplicationConst;
+import model.constant.ApplicationConst;
 
 public class InspectionHistoryDao {
 	public void deleteAllInspectionHistory(SqlSession sqlSession) {

@@ -9,7 +9,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import config.MyBatisConnectionFactory;
 import dao.InspectionHistoryDao;
 import dao.WarningHistoryDao;
-import domain.dto.WarningHistoryDto;
+import model.dto.WarningHistoryDto;
 
 public class MybatisService {
 	private SqlSessionFactory sqlSessionFactory = MyBatisConnectionFactory.getSqlSessionFactory();
