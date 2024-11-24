@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import domain.constant.PropertiesEnum;
+import domain.constant.PropertiesConst;
 import domain.vo.DustDataVo;
 
 public class FileService {
@@ -19,7 +19,7 @@ public class FileService {
 		mapper.registerModule(new JavaTimeModule());
 		List<DustDataVo> list = new ArrayList<>();
 		try {
-			File file = new File(properties.getProperty(PropertiesEnum.JsonFilePath.getStr()));
+			File file = new File(properties.getProperty(PropertiesConst.JsonFilePath));
 			list = mapper.readValue(file, new TypeReference<List<DustDataVo>>() {});
 		} catch(Exception e) {
 			System.out.println("Read Json File Error");
@@ -31,7 +31,7 @@ public class FileService {
 	public Properties readProperties() {
 		Properties properties = new Properties();
 		try {
-			FileReader reader= new FileReader(PropertiesEnum.PropertiesPath.getStr());
+			FileReader reader= new FileReader(PropertiesConst.PropertiesPath);
 			properties.load(reader);
 		} catch(Exception e) {
 			System.out.println("Read Properties Error");
