@@ -71,7 +71,7 @@ $\bf \large 개발\ 환경$
 $\bf \large 기술\ 스택$
 
 - Java
-- JPA(?)
+- Mybatis
 - PostgreSQL
 
 ---
@@ -83,17 +83,17 @@ $\bf \large Database\ 명세$
     
     | Column | Type | 설명 | 비고 |
     | --- | --- | --- | --- |
-    | issueTime | Timestamp | 발령시간 | primarykey |
-    | station | VarChar(16) | 측정소 | primarykey |
+    | districtName | VarChar(16) | 측정소 | primarykey |
+    | date | Timestamp | 발령시간 | primarykey |
     | rate | Integer | 등급 | not null |
 - InspectionHistory(점검 이력 저장 테이블)
     
     
     | Column | Type | 설명 | 비고 |
     | --- | --- | --- | --- |
-    | issueTime | Timestamp | 발령시간 | primarykey |
-    | station | VarChar(16) | 측정소 | primarykey |
-- crtab
+    | districtName | VarChar(16) | 측정소 | primarykey |
+    | date | Timestamp | 발령시간 | primarykey |
+   
 
 ---
 
@@ -104,3 +104,5 @@ lib폴더 밑에 존재하는 다음 jar파일을 추가한다.
 - jackson-databind-2.15.2
 - jackson-annotations-2.15.2
 - jackson-datatype-jsr310-2.15.2
+- mybatis-3.5.6.jar
+- postgresql-42.7.3.jar
