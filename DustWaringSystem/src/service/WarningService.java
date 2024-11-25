@@ -1,11 +1,13 @@
 package service;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import model.constant.SeoulDistrictEnum;
 import model.dto.InspectionHistoryDto;
 import model.dto.WarningHistoryDto;
 import model.vo.DustDataVo;
@@ -17,38 +19,33 @@ public class WarningService {
 		//기존 이력 삭제
 		deleteHistory();
 
-		Map<String, List<DustDataVo>> map = datas.stream()
-				.sorted(Comparator.comparing(DustDataVo::getDate))
-				.collect(Collectors.groupingBy(DustDataVo::getDistrictName));
+		datas = datas.stream().sorted(Comparator.comparing(DustDataVo::getDate)).collect(Collectors.toList());
+		Map<String, Integer> pm10Map = initDistrictMap();
+		Map<String, Integer> pm25Map = initDistrictMap();
 
-		for(List<DustDataVo> list: map.values()) {
-			int prev10 = 0;
-			int prev25 = 0;
-			for(DustDataVo vo: list) {
-				if(vo.getPm10() == null || vo.getPm25() == null) {
-					InspectionHistoryDto dto = new InspectionHistoryDto(vo.getDistrictName(), vo.getDate());
-					mybatisService.insertInspectionHistory(dto);
-					prev10 =0;
-					prev25 =0;
-				} else {
-					int cur10 = vo.getPm10();
-					int cur25 = vo.getPm25();
-					if(prev25 >= 150 && cur25 >= 150) {
-						WarningHistoryDto dto = new WarningHistoryDto(vo.getDistrictName(), vo.getDate(), 1);
-						mybatisService.insertWarningHistory(dto);
-					} else if(prev10 >= 300 && cur10 >= 300) {
-						WarningHistoryDto dto = new WarningHistoryDto(vo.getDistrictName(), vo.getDate(), 2);
-						mybatisService.insertWarningHistory(dto);
-					} else if(prev25 >= 75 && cur25 >= 75) {
-						WarningHistoryDto dto = new WarningHistoryDto(vo.getDistrictName(), vo.getDate(), 3);
-						mybatisService.insertWarningHistory(dto);
-					} else if(prev10 >= 150 && cur10 >= 150) {
-						WarningHistoryDto dto = new WarningHistoryDto(vo.getDistrictName(), vo.getDate(), 4);
-						mybatisService.insertWarningHistory(dto);
-					}
-					prev10 = cur10;
-					prev25 = cur25;
+		for(DustDataVo vo: datas) {
+			String district = vo.getDistrictName();
+			int prev10 = pm10Map.get(district);
+			int prev25 = pm25Map.get(district);
+			if(vo.getPm10() == null || vo.getPm25() == null) {
+				InspectionHistoryDto dto = new InspectionHistoryDto(district, vo.getDate());
+				mybatisService.insertInspectionHistory(dto);
+				pm10Map.put(district, 0);
+				pm25Map.put(district, 0);
+			} else {
+				int cur10 = vo.getPm10();
+				int cur25 = vo.getPm25();
+				if(prev25 >= 150 && cur25 >= 150) {
+					createWarningHistory(vo, 1);
+				} else if(prev10 >= 300 && cur10 >= 300) {
+					createWarningHistory(vo, 2);
+				} else if(prev25 >= 75 && cur25 >= 75) {
+					createWarningHistory(vo, 3);
+				} else if(prev10 >= 150 && cur10 >= 150) {
+					createWarningHistory(vo, 4);
 				}
+				pm10Map.put(district, cur10);
+				pm25Map.put(district, cur25);
 			}
 		}
 	}
@@ -58,6 +55,20 @@ public class WarningService {
 		mybatisService.deleteAllWarningHistory();
 		System.out.println("점검 이력 삭제");
 		mybatisService.deleteAllInspectionHistory();
+	}
+
+	private Map<String, Integer> initDistrictMap() {
+		Map<String, Integer> map = new HashMap<>();
+		for(SeoulDistrictEnum district:SeoulDistrictEnum.values()) {
+			map.put(district.getKoreanName(), 0);
+		}
+		return map;
+	}
+
+	private void createWarningHistory(DustDataVo vo ,Integer rate) throws Exception{
+		WarningHistoryDto dto = new WarningHistoryDto(vo.getDistrictName(), vo.getDate(), rate);
+		mybatisService.insertWarningHistory(dto);
+		//이력 전송
 	}
 
 	public void selectHistory() throws Exception {
@@ -70,12 +81,12 @@ public class WarningService {
 			if(res.equals("Y") || res.equals("y")) {
 				System.out.println("점검 내역");
 				for(InspectionHistoryDto dto: inspection) {
-					System.out.printf("측정소: %s 점검 시간: %s\n", dto.getDistrictName(), dto.getDate());
+					System.out.printf("점검 >>> 측정소: %-5s 점검 시간: %s\n", dto.getDistrictName(), dto.getDate());
 				}
 
 				System.out.println("경고 내역");
 				for(WarningHistoryDto dto: warning) {
-					System.out.printf("측정소: %s 경고 시간: %s 발령 단계: %d\n", dto.getDistrictName(), dto.getDate(), dto.getRate());
+					System.out.printf("경고 >>> 측정소: %-5s 경고 시간: %s 발령 단계: %d\n", dto.getDistrictName(), dto.getDate(), dto.getRate());
 				}
 			}
 		} catch(Exception e) {
