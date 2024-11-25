@@ -4,7 +4,13 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Facade">
 	<!-- Insert -->
+	<insert id="insertWarningHistory" parameterType="WarningHistory">
+		insert into warninghistory(districtname, date, rate) values (#{districtName} , #{date} , #{rate})
+	</insert>
 	
+	<insert id="insertInspectionHistory" parameterType="InspectionHistory">
+		insert into inspectionhistory(districtname, date) values (#{districtName} , #{date})
+	</insert>
 	<!-- Update -->
 	
 	<!-- Delete -->
@@ -20,5 +26,9 @@
 	<!-- Select -->
 	<select id="selectAllWarningHistory" resultType="WarningHistory">
 		SELECT * FROM warninghistory
+	</select>
+	
+	<select id="selectAllInspectionHistory" resultType="InspectionHistory">
+		SELECT * FROM inspectionhistory
 	</select>
 </mapper>
