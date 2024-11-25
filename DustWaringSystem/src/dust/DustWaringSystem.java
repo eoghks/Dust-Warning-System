@@ -18,6 +18,7 @@ public class DustWaringSystem {
 			//경고 발령 및 이력 저장
 			warningService.createWarning(datas);
 			//DB 조회 및 출력
+			warningService.selectHistory();
 			System.out.println("작업 완료");
 		}catch (Exception e) {
 			e.printStackTrace();
