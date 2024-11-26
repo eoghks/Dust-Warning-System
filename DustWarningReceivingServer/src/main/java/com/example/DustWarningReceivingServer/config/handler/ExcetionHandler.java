@@ -11,7 +11,7 @@ import com.example.DustWarningReceivingServer.model.error.UserDefinedException;
 import com.example.DustWarningReceivingServer.model.vo.ApiErrorResultVo;
 
 
-@RestControllerAdvice(basePackages = "com.example.SpringSecurity_Example")
+@RestControllerAdvice(basePackages = "com.example.DustWarningReceivingServer")
 public class ExcetionHandler{
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<?> MethodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e){
