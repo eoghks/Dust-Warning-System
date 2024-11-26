@@ -174,6 +174,8 @@ create table member(
 	loginId  Varchar(64) not null unique,
 	password Varchar(64) not null
 );
+
+insert into member values(1, 'admin', 'Admin123!@');
 ```
 
 ---
