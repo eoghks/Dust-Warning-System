@@ -175,7 +175,7 @@ create table member(
 	password Varchar(64) not null
 );
 
-insert into member values(1, 'admin', 'Admin123!@');
+insert into member values(1, 'admin', '$2a$10$REIcDM4o69q5KDab5FpIyOhiLIOm.EMuPFlFCApNptpvDdkS.QJjy');
 ```
 
 ---
