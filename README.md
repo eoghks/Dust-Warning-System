@@ -142,7 +142,10 @@ $\bf \large 추가\ 요구\ 사항$
 
 
 ---
+# Dust-Warning-Receiving-System
+미세먼지와 초미세먼지 경고 발령 시스템(Dust-Warning-System)에서 송신한 경보 메시지를 수신하여 log에 기록하는 시스템
 
+--- 
 $\bf \large 추가\ 요구사항\ Database\ 명세$
 
 - Member
