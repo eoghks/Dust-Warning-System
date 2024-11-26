@@ -84,6 +84,35 @@ $\bf \large Database\ 명세$
     | districtName | VarChar(16) | 측정소 | primarykey |
     | date | Timestamp | 발령시간 | primarykey |
    
+---
+
+$\bf \large Database\  crtab$
+
+- 유저 및 데이터베이스 생성
+
+```sql
+create user dust_warning_system password 'dust_warning_system' SUPERUSER;
+
+create database dust_warning_system  with owner dust_warning_system encoding 'UTF8';
+```
+
+- 테이블 생성(dust_warning_system DB에 생성!!)
+```sql
+--drop table warningHistory
+create table warningHistory(
+	districtName VARCHAR(16) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    rate INTEGER NOT NULL,
+    PRIMARY KEY (districtName, date)
+);
+
+--drop table inspectionHistory
+create table inspectionHistory(
+	districtName Varchar(16) NOT NULL,
+	date TIMESTAMP NOT NULL,
+	PRIMARY KEY (districtName, date)
+);
+```
 
 ---
 
@@ -111,3 +140,40 @@ $\bf \large 추가\ 요구\ 사항$
     - 발생한 시간 순서대로 전송
     - 경보 발령을 수신하는 주체와 발신하는 주체 모두 필요
 
+
+---
+
+$\bf \large 추가\ 요구사항\ Database\ 명세$
+
+- Member
+    | Column | Type | 설명 | 비고 |
+    | --- | --- | --- | --- |
+    | memberId | Long | 사용자 Id | primary key, Auto Increment |
+    | loginId | VarChar(64) | 로그인 Id | unique, not null |
+    | password | VarChar(64) | 비밀번호 | not null |
+
+
+---
+
+$\bf \large 추가\ 요구사항\ Database\  crtab$
+
+- 유저 및 데이터베이스 생성
+
+```sql
+create user dust_warning_receive_server password 'dust_warning_receive_server' SUPERUSER;
+
+create database dust_warning_receive_server  with owner dust_warning_receive_server encoding 'UTF8';
+```
+
+- 테이블 생성(dust_warning_receive_server DB에 생성!!)
+```sql
+create sequence member_id_seq;
+--drop table member
+create table member(
+	memberId int8 primary key default nextval('member_id_seq'),
+	loginId  Varchar(64) not null unique,
+	password Varchar(64) not null
+);
+```
+
+---
