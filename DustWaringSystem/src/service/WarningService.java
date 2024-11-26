@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import model.constant.RateEnum;
 import model.constant.SeoulDistrictEnum;
 import model.dto.InspectionHistoryDto;
 import model.dto.WarningHistoryDto;
@@ -36,13 +37,13 @@ public class WarningService {
 				int cur10 = vo.getPm10();
 				int cur25 = vo.getPm25();
 				if(prev25 >= 150 && cur25 >= 150) {
-					createWarningHistory(vo, 1);
+					createWarningHistory(vo, RateEnum.ULTRA_FINE_DUST_WARNING.getRate());
 				} else if(prev10 >= 300 && cur10 >= 300) {
-					createWarningHistory(vo, 2);
+					createWarningHistory(vo, RateEnum.FINE_DUST_WARNING.getRate());
 				} else if(prev25 >= 75 && cur25 >= 75) {
-					createWarningHistory(vo, 3);
+					createWarningHistory(vo, RateEnum.ULTRA_FINE_DUST_ADVISORY.getRate());
 				} else if(prev10 >= 150 && cur10 >= 150) {
-					createWarningHistory(vo, 4);
+					createWarningHistory(vo, RateEnum.FINE_DUST_ADVISORY.getRate());
 				}
 				pm10Map.put(district, cur10);
 				pm25Map.put(district, cur25);
@@ -75,18 +76,18 @@ public class WarningService {
 		try (Scanner sc = new Scanner(System.in)) {
 			List<InspectionHistoryDto> inspection = mybatisService.selectAllInspectionHistory();
 			List<WarningHistoryDto> warning = mybatisService.selectAllWarningHistory();
-			System.out.printf("점검 이력: %d, 경고 이력: %d이 DB에서 조회되었습니다.\n", inspection.size(), warning.size());
+			System.out.printf("점검 이력: %d, 경고 이력: %d개가 DB에서 조회되었습니다.\n", inspection.size(), warning.size());
 			System.out.println("상세 내역을 보시겠습니까? (Y/N)");
 			String res = sc.next();
 			if(res.equals("Y") || res.equals("y")) {
 				System.out.println("점검 내역");
 				for(InspectionHistoryDto dto: inspection) {
-					System.out.printf("점검 >>> 측정소: %-5s 점검 시간: %s\n", dto.getDistrictName(), dto.getDate());
+					System.out.printf("점검 >>> 측정소: %-5s 점검 시간: %-17s\n", dto.getDistrictName(), dto.getDate());
 				}
 
 				System.out.println("경고 내역");
 				for(WarningHistoryDto dto: warning) {
-					System.out.printf("경고 >>> 측정소: %-5s 경고 시간: %s 발령 단계: %d\n", dto.getDistrictName(), dto.getDate(), dto.getRate());
+					System.out.printf("경고 >>> 측정소: %-5s 경고 시간: %-17s 발령 단계: %s\n", dto.getDistrictName(), dto.getDate(), RateEnum.convertKoreanName(dto.getRate()));
 				}
 			}
 		} catch(Exception e) {
