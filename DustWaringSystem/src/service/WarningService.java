@@ -15,6 +15,7 @@ import model.vo.DustDataVo;
 
 public class WarningService {
 	private MybatisService mybatisService = new MybatisService();
+	private String jwtToken = null;
 
 	public void createWarning(List<DustDataVo> datas) throws Exception {
 		//기존 이력 삭제
@@ -52,9 +53,7 @@ public class WarningService {
 	}
 
 	private void deleteHistory() throws Exception {
-		System.out.println("경보 이력 삭제");
 		mybatisService.deleteAllWarningHistory();
-		System.out.println("점검 이력 삭제");
 		mybatisService.deleteAllInspectionHistory();
 	}
 
@@ -69,30 +68,40 @@ public class WarningService {
 	private void createWarningHistory(DustDataVo vo ,Integer rate) throws Exception{
 		WarningHistoryDto dto = new WarningHistoryDto(vo.getDistrictName(), vo.getDate(), rate);
 		mybatisService.insertWarningHistory(dto);
-		//이력 전송 추가 요구 사항(전송된 이력에 대한 성공 메시지 받을지 여부는 추후 결정)
+		if(jwtToken != null) {
+			//이력 전송 추가 요구 사항(전송된 이력에 대한 성공 메시지 받을지 여부는 추후 결정)
+		}
 	}
 
 	public void selectHistory() throws Exception {
 		try (Scanner sc = new Scanner(System.in)) {
-			List<InspectionHistoryDto> inspection = mybatisService.selectAllInspectionHistory();
-			List<WarningHistoryDto> warning = mybatisService.selectAllWarningHistory();
-			System.out.printf("점검 이력: %d, 경고 이력: %d개가 DB에서 조회되었습니다.\n", inspection.size(), warning.size());
-			System.out.println("상세 내역을 보시겠습니까? (Y/N)");
-			String res = sc.next();
-			if(res.equals("Y") || res.equals("y")) {
-				System.out.println("점검 내역");
-				for(InspectionHistoryDto dto: inspection) {
-					System.out.printf("점검 >>> 측정소: %-5s 점검 시간: %-17s\n", dto.getDistrictName(), dto.getDate());
-				}
+			System.out.println("DB 저장이 완료되었습니다. 저장 내역을 보시겠습니까?(저장 내역을 보시려면 Y 또는 y를 입력하세요.");
+			String answer = sc.next();
+			if(answer.equals("Y") || answer.equals("y")) {
+				List<InspectionHistoryDto> inspection = mybatisService.selectAllInspectionHistory();
+				List<WarningHistoryDto> warning = mybatisService.selectAllWarningHistory();
+				System.out.printf("점검 이력 %d건, 경고 이력 %d건이 DB에 저장되었습니다.\n", inspection.size(), warning.size());
+				System.out.println("상세 내역을 보시겠습니까? (상세 내역을 보시려면 Y 또는 y를 입력하세요.)");
+				answer= sc.next();
+				if(answer.equals("Y") || answer.equals("y")) {
+					System.out.println("-------------점검 내역-------------");
+					for(InspectionHistoryDto dto: inspection) {
+						System.out.printf("%-17s %-5s 점검\n", dto.getDate(), dto.getDistrictName());
+					}
 
-				System.out.println("경고 내역");
-				for(WarningHistoryDto dto: warning) {
-					System.out.printf("경고 >>> 측정소: %-5s 경고 시간: %-17s 발령 단계: %s\n", dto.getDistrictName(), dto.getDate(), RateEnum.convertKoreanName(dto.getRate()));
+					System.out.println("-------------경고 내역-------------");
+					for(WarningHistoryDto dto: warning) {
+						System.out.printf("%-17s %-5s %s\n", dto.getDate(), dto.getDistrictName(), RateEnum.convertKoreanName(dto.getRate()));
+					}
 				}
 			}
 		} catch(Exception e) {
 			System.out.println("DB 조회 오류");
 			throw e;
 		}
+	}
+
+	public void setToken(String jwtToken) {
+		this.jwtToken = jwtToken;
 	}
 }
