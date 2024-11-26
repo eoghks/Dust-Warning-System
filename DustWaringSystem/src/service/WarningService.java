@@ -69,7 +69,7 @@ public class WarningService {
 	private void createWarningHistory(DustDataVo vo ,Integer rate) throws Exception{
 		WarningHistoryDto dto = new WarningHistoryDto(vo.getDistrictName(), vo.getDate(), rate);
 		mybatisService.insertWarningHistory(dto);
-		//이력 전송
+		//이력 전송 추가 요구 사항(전송된 이력에 대한 성공 메시지 받을지 여부는 추후 결정)
 	}
 
 	public void selectHistory() throws Exception {
