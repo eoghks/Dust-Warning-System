@@ -15,62 +15,77 @@ import model.vo.ApiErrorResultVo;
 import model.vo.LoginResultVo;
 
 public class SendService {
-	public String getJwtToken() throws Exception{
+
+	public String send(String urlStr, String sendData, boolean doOutput) throws Exception {
+		String result = null;
 		HttpURLConnection connection = null;
-		UserDto user = new UserDto(ApplicationConst.LoginId, ApplicationConst.password);
 		try {
-			URL url = new URL(ApplicationConst.Local+ApplicationConst.LoginUrl);
+			URL url = new URL(urlStr);
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod(ApplicationConst.POST);
 			connection.setRequestProperty(ApplicationConst.ContentType, ApplicationConst.ApplicationJSON);
 			connection.setConnectTimeout(ApplicationConst.Timeout);
 			connection.setReadTimeout(ApplicationConst.Timeout);
-			connection.setDoOutput(true);
-
-			ObjectMapper objectMapper = new ObjectMapper();
-			String sendData = objectMapper.writeValueAsString(user);
+			connection.setDoOutput(doOutput);
 
 			try (OutputStream os = connection.getOutputStream()) {
 				byte[] input = sendData.getBytes(StandardCharsets.UTF_8);
 				os.write(input, 0, input.length);
 			}
 
-			int responseCode = connection.getResponseCode();
-			StringBuilder response = new StringBuilder();
+			if(doOutput) {
+				int responseCode = connection.getResponseCode();
+				StringBuilder response = new StringBuilder();
 
-			if(responseCode == HttpURLConnection.HTTP_OK) {
-				try (BufferedReader br = new BufferedReader(
-					new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+				if(responseCode == HttpURLConnection.HTTP_OK) {
+					try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
 						String responseLine;
 						while ((responseLine = br.readLine()) != null) {
 							response.append(responseLine);
 						}
-				}
-				LoginResultVo result = objectMapper.readValue(response.toString(), LoginResultVo.class);
-				return result.getToken();
-			} else {
-				try (BufferedReader br = new BufferedReader(
-					new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
-						String responseLine;
-						while ((responseLine = br.readLine()) != null) {
-							response.append(responseLine);
-						}
-				}
-				ApiErrorResultVo result = objectMapper.readValue(response.toString(), ApiErrorResultVo.class);
-				if(result != null && result.getMsgs()!= null && result.getMsgs().size() > 0) {
-					throw new Exception(result.getMsgs().get(0));
+						result = response.toString();
+					}
 				} else {
-					throw new Exception("Unknown Error");
+					try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
+							String responseLine;
+							while ((responseLine = br.readLine()) != null) {
+								response.append(responseLine);
+							}
+							ObjectMapper objectMapper = new ObjectMapper();
+							ApiErrorResultVo vo = objectMapper.readValue(response.toString(), ApiErrorResultVo.class);
+							if(vo != null && vo.getMsgs()!= null && vo.getMsgs().size() > 0) {
+								throw new Exception(vo.getMsgs().get(0));
+							} else {
+								throw new Exception("Unknown Error");
+							}
+						}
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("JWT 토큰 발급 실패!! 경보 발생 시 이벤트 전송이 불가합니다.");
+			System.out.println("통신 오류");
 			e.printStackTrace();
+			throw e;
 		} finally {
 			if(connection != null) {
 				connection.disconnect();
 			}
 		}
-		return null;
+		return result;
+	}
+
+	public String getJwtToken() throws Exception{
+		String result = null;
+		try {
+			String url = ApplicationConst.Local + ApplicationConst.LoginUrl;
+			UserDto user = new UserDto(ApplicationConst.LoginId, ApplicationConst.password);
+			ObjectMapper objectMapper = new ObjectMapper();
+			String sendData = objectMapper.writeValueAsString(user);
+			String response = send(url, sendData, true);
+			LoginResultVo vo = objectMapper.readValue(response, LoginResultVo.class);
+			result = vo.getToken();
+		} catch (Exception e) {
+			System.out.println("JWT 토큰 발급 실패!! 경보 발생 시 이벤트 전송이 불가합니다.");
+		}
+		return result;
 	}
 }

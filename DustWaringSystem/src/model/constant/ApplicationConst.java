@@ -14,7 +14,7 @@ public class ApplicationConst {
 	public final static String ApplicationJSON = "application/json";
 
 	public final static String LoginId = "admin";
-	public final static String password = "Admin123!@1";
+	public final static String password = "Admin123!@";
 
-	public final static int Timeout = 2000;
+	public final static int Timeout = 5000;
 }
