@@ -14,8 +14,8 @@ import model.dto.WarningHistoryDto;
 import model.vo.DustDataVo;
 
 public class WarningService {
+	private SendService sendService = SendService.getInstance();
 	private MybatisService mybatisService = new MybatisService();
-	private String jwtToken = null;
 
 	public void createWarning(List<DustDataVo> datas) throws Exception {
 		//기존 이력 삭제
@@ -68,9 +68,7 @@ public class WarningService {
 	private void createWarningHistory(DustDataVo vo ,Integer rate) throws Exception{
 		WarningHistoryDto dto = new WarningHistoryDto(vo.getDistrictName(), vo.getDate(), rate);
 		mybatisService.insertWarningHistory(dto);
-		if(jwtToken != null) {
-			//이력 전송 추가 요구 사항(전송된 이력에 대한 성공 메시지 받을지 여부는 추후 결정)
-		}
+		sendService.sendWarningHistory(dto);
 	}
 
 	public void selectHistory() throws Exception {
@@ -86,12 +84,12 @@ public class WarningService {
 				if(answer.equals("Y") || answer.equals("y")) {
 					System.out.println("-------------점검 내역-------------");
 					for(InspectionHistoryDto dto: inspection) {
-						System.out.printf("%-17s %-5s 점검\n", dto.getDate(), dto.getDistrictName());
+						System.out.printf("%-16s %-4s 점검\n", dto.getDate(), dto.getDistrictName());
 					}
 
 					System.out.println("-------------경고 내역-------------");
 					for(WarningHistoryDto dto: warning) {
-						System.out.printf("%-17s %-5s %s\n", dto.getDate(), dto.getDistrictName(), RateEnum.convertKoreanName(dto.getRate()));
+						System.out.printf("%-16s %-4s %s\n", dto.getDate(), dto.getDistrictName(), RateEnum.convertKoreanName(dto.getRate()));
 					}
 				}
 			}
@@ -99,9 +97,5 @@ public class WarningService {
 			System.out.println("DB 조회 오류");
 			throw e;
 		}
-	}
-
-	public void setToken(String jwtToken) {
-		this.jwtToken = jwtToken;
 	}
 }

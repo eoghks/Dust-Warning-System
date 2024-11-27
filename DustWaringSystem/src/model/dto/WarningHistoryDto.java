@@ -7,6 +7,9 @@ public class WarningHistoryDto {
 	private LocalDateTime date;
 	private Integer rate;
 
+	public WarningHistoryDto() {
+	}
+
 	public WarningHistoryDto(String districtName, LocalDateTime date, Integer rate) {
 		this.districtName = districtName;
 		this.date = date;
